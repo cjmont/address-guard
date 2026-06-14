@@ -1,0 +1,22 @@
+[package]
+name = "address-guard-wasm"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "WebAssembly (wasm-bindgen) binding for address-guard."
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+address-guard-core = { path = "../address-guard-core" }
+serde_json = "1"
+
+# wasm-opt (bundled with wasm-pack) is too old to validate wasm emitted by
+# recent rustc; rustc already optimizes via the workspace release profile
+# (opt-level = "z", lto). Disable the post-step to keep the build reproducible.
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false

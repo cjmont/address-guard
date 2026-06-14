@@ -1,0 +1,83 @@
+{
+  "name": "address-guard",
+  "version": "0.1.0",
+  "description": "Fast, safety-first address validation for EVM, Solana and TRON — not just 'is it valid?' but 'is it safe to send funds here?'. Rust core, Node (napi) + browser (WASM).",
+  "author": "carlosmontanor",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cjmont/address-guard.git"
+  },
+  "keywords": [
+    "ethereum",
+    "evm",
+    "solana",
+    "tron",
+    "address",
+    "validation",
+    "eip-55",
+    "eip-1191",
+    "checksum",
+    "address-poisoning",
+    "web3",
+    "wallet",
+    "wasm",
+    "napi-rs"
+  ],
+  "type": "commonjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "import": "./dist/browser.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "binding.js",
+    "binding.d.ts",
+    "wasm"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "napi": {
+    "binaryName": "address-guard",
+    "packageName": "address-guard",
+    "targets": [
+      "x86_64-pc-windows-msvc",
+      "x86_64-unknown-linux-gnu",
+      "aarch64-unknown-linux-gnu",
+      "x86_64-apple-darwin",
+      "aarch64-apple-darwin"
+    ]
+  },
+  "scripts": {
+    "build:rust": "napi build --release --platform --js-package-name address-guard --manifest-path ../../crates/address-guard-napi/Cargo.toml --js binding.js --dts binding.d.ts --output-dir .",
+    "build:rust:debug": "napi build --platform --js-package-name address-guard --manifest-path ../../crates/address-guard-napi/Cargo.toml --js binding.js --dts binding.d.ts --output-dir .",
+    "build:wasm": "wasm-pack build ../../crates/address-guard-wasm --release --target web --out-dir ../../packages/address-guard/wasm --out-name address-guard",
+    "build:ts": "tsup",
+    "build": "npm run build:rust && npm run build:wasm && npm run build:ts",
+    "test": "node --test \"test/**/*.test.mjs\""
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^3.0.0",
+    "@types/node": "^22.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  },
+  "optionalDependencies": {
+    "address-guard-win32-x64-msvc": "0.1.0",
+    "address-guard-linux-x64-gnu": "0.1.0",
+    "address-guard-linux-arm64-gnu": "0.1.0",
+    "address-guard-darwin-x64": "0.1.0",
+    "address-guard-darwin-arm64": "0.1.0"
+  }
+}

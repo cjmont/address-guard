@@ -1,0 +1,40 @@
+{
+  "name": "address-guard-darwin-x64",
+  "version": "0.1.0",
+  "cpu": [
+    "x64"
+  ],
+  "main": "address-guard.darwin-x64.node",
+  "files": [
+    "address-guard.darwin-x64.node"
+  ],
+  "description": "Fast, safety-first address validation for EVM, Solana and TRON — not just 'is it valid?' but 'is it safe to send funds here?'. Rust core, Node (napi) + browser (WASM).",
+  "keywords": [
+    "ethereum",
+    "evm",
+    "solana",
+    "tron",
+    "address",
+    "validation",
+    "eip-55",
+    "eip-1191",
+    "checksum",
+    "address-poisoning",
+    "web3",
+    "wallet",
+    "wasm",
+    "napi-rs"
+  ],
+  "author": "carlosmontanor",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cjmont/address-guard.git"
+  },
+  "os": [
+    "darwin"
+  ]
+}

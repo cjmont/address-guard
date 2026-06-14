@@ -1,0 +1,20 @@
+[package]
+name = "address-guard-napi"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Node.js (napi-rs) binding for address-guard."
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+napi = { version = "3", default-features = false, features = ["napi8"] }
+napi-derive = "3"
+address-guard-core = { path = "../address-guard-core" }
+serde_json = "1"
+
+[build-dependencies]
+napi-build = "2"

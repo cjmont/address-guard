@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+  PACKAGE_DIR: packages/address-guard
+
+jobs:
+  rust:
+    name: Rust core (fmt, clippy, tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - name: Format check
+        run: cargo fmt --all -- --check
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+      - name: Core tests
+        run: cargo test -p address-guard-core -- --nocapture
+
+  node:
+    name: Node + WASM (${{ matrix.os }}, Node ${{ matrix.node }})
+    needs: rust
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - uses: jetli/wasm-pack-action@v0.4.0
+        with:
+          version: "latest"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: ${{ env.PACKAGE_DIR }}/package-lock.json
+      - name: Install deps
+        working-directory: ${{ env.PACKAGE_DIR }}
+        run: npm ci
+      - name: Build native addon (debug)
+        working-directory: ${{ env.PACKAGE_DIR }}
+        run: npm run build:rust:debug
+      - name: Build WASM
+        working-directory: ${{ env.PACKAGE_DIR }}
+        run: npm run build:wasm
+      - name: Build TypeScript
+        working-directory: ${{ env.PACKAGE_DIR }}
+        run: npm run build:ts
+      - name: Node tests
+        working-directory: ${{ env.PACKAGE_DIR }}
+        run: npm test

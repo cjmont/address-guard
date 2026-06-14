@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>address-guard — browser/WASM example</title>
+    <style>
+      body { font: 15px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; }
+      input { width: 100%; padding: 0.5rem; font-family: monospace; }
+      pre { background: #f4f4f5; padding: 1rem; border-radius: 8px; overflow: auto; }
+      .high { color: #b91c1c; } .medium { color: #b45309; } .none { color: #15803d; }
+    </style>
+  </head>
+  <body>
+    <h1>address-guard (WASM)</h1>
+    <p>Type an EVM, Solana or TRON address:</p>
+    <input id="addr" placeholder="0x… / T… / base58…" value="0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed" />
+    <pre id="out">loading WASM…</pre>
+
+    <script type="module">
+      // In a real app: import { init, validate } from "address-guard/browser";
+      // Served from the repo, we point at the built browser bundle.
+      import { init, validate } from "../../packages/address-guard/dist/browser.mjs";
+
+      const out = document.getElementById("out");
+      const addr = document.getElementById("addr");
+
+      await init(); // load the WASM module once
+
+      function render() {
+        const r = validate(addr.value.trim());
+        out.textContent = JSON.stringify(r, null, 2);
+        out.className = r.risk;
+      }
+      addr.addEventListener("input", render);
+      render();
+    </script>
+  </body>
+</html>

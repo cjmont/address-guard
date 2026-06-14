@@ -1,0 +1,16 @@
+[package]
+name = "address-guard-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Core address validation and transfer-safety logic for address-guard (EVM, Solana, TRON)."
+
+[dependencies]
+serde = { version = "1", default-features = false, features = ["derive", "alloc"] }
+sha3 = { version = "0.12", default-features = false }
+sha2 = { version = "0.11", default-features = false }
+bs58 = { version = "0.5", default-features = false, features = ["alloc"] }
+curve25519-dalek = { version = "4.1", default-features = false, features = ["alloc"] }
+hex = { version = "0.4", default-features = false, features = ["alloc"] }
